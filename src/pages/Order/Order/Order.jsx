@@ -3,36 +3,24 @@ import Cover from "../../Shared/Cover/Cover";
 import shopCoverImg from "../../../assets/shop/banner2.jpg";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import { useEffect, useState } from "react";
-// import useMenu from "../../../hooks/useMenu";
+import {  useState } from "react";
 import OrderTab from "../OrderTab/OrderTab";
-import { useParams } from 'react-router-dom';
-import { menuData } from "../../../../public/menuData";
+// import { useParams } from 'react-router-dom';
+import useMenu from "../../../hooks/useMenu";
+import { useParams } from "react-router-dom";
 
 
 const Order = () => {
-  const data = menuData()
+  const categories = ["dessert", "soup", "pizza", "salad"];
   const { category } = useParams();
-  const [tabIndex, setTabIndex] = useState(0);
-  const [menu, setMenu] = useState(data);
-  const initialCategory = category || "all"; // Default to "all" if no category is provided
-
-  useEffect(() => {
-    // Fetch menu data based on the category parameter
-    if (initialCategory === "all") {
-      // Fetch all menu items
-      setMenu(data);
-    } else {
-      // Fetch menu items based on the category
-      const filteredMenu = data.filter(item => item.category === initialCategory);
-      setMenu(filteredMenu);
-    }
-  }, [initialCategory]);
+  const initialIndex = categories.indexOf(category);
+  const [tabIndex, setTabIndex] = useState(initialIndex);
+  const [menu] = useMenu(); 
+  
   
   
 
   const desserts = menu?.filter(item => item.category === 'dessert');
-  console.log("desserts", menu);
   const soup = menu?.filter(item => item.category === 'soup');
   const pizza = menu?.filter(item => item.category === 'pizza');
   const salad = menu?.filter(item => item.category === 'salad');
@@ -45,10 +33,10 @@ const Order = () => {
       <Cover img={shopCoverImg} title='Our Shop'></Cover>
       <Tabs className="my-20 flex flex-col items-center" defaultIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
       <TabList className="uppercase card-title">
-        <Tab>salad</Tab>
+        <Tab>dessert</Tab>
         <Tab>soup</Tab>
         <Tab>pizza</Tab>
-        <Tab>dessert</Tab>
+        <Tab>salad</Tab>
       </TabList>
       <TabPanel>
         <OrderTab items={salad}></OrderTab>
